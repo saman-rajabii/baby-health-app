@@ -1,0 +1,61 @@
+version: '3.8'
+
+services:
+  # Frontend React app
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: baby-health-app-frontend
+    ports:
+      - '80:80'
+    restart: unless-stopped
+    depends_on:
+      - backend
+    environment:
+      - REACT_APP_API_URL=http://localhost:7000
+
+  # Backend API service
+  backend:
+    image: node:20-alpine
+    container_name: baby-health-app-backend
+    working_dir: /app
+    volumes:
+      - ${BACKEND_PATH:-../baby-health-api}:/app
+    ports:
+      - '7000:7000'
+    command: >
+      sh -c "
+        if [ -f package.json ]; then
+          npm install &&
+          npm start
+        else
+          echo 'Backend code not found. Please update the BACKEND_PATH environment variable or mount the backend code to /app';
+          sleep infinity
+        fi
+      "
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=development
+      - PORT=7000
+
+  # For local development - React dev server with hot reloading
+  frontend-dev:
+    image: node:20-alpine
+    container_name: baby-health-app-frontend-dev
+    working_dir: /app
+    volumes:
+      - .:/app
+      - /app/node_modules
+    ports:
+      - '3000:3000'
+    command: npm start
+    environment:
+      - REACT_APP_API_URL=http://localhost:7000
+      - CHOKIDAR_USEPOLLING=true
+      - NODE_ENV=development
+    profiles:
+      - dev
+
+volumes:
+  node_modules:

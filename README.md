@@ -1,46 +1,102 @@
-# Getting Started with Create React App
+# Baby Health App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A React application for tracking baby health metrics during pregnancy, including kick counting and contraction timing.
 
-## Available Scripts
+## Running with Docker
 
-In the project directory, you can run:
+This project is containerized with Docker for easy setup and deployment.
 
-### `npm start`
+### Prerequisites
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- [Docker](https://docs.docker.com/get-docker/)
+- [Docker Compose](https://docs.docker.com/compose/install/)
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+### Quick Start
 
-### `npm test`
+1. Clone the repository:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+   ```bash
+   git clone https://github.com/saman-rajabii/baby-health-app.git
+   cd baby-health-app
+   ```
 
-### `npm run build`
+2. Build and start the containers:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+   ```bash
+   docker-compose up --build
+   ```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+3. Access the application:
+   - Frontend: http://localhost:80
+   - Backend API: http://localhost:7000
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Development Mode
 
-### `npm run eject`
+For development with hot reloading:
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+```bash
+docker-compose --profile dev up frontend-dev
+```
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+This will run the application in development mode on http://localhost:3000
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+### Running Individual Services
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+To run only the frontend:
 
-## Learn More
+```bash
+docker-compose up frontend
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+To run only the backend (requires backend code):
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+```bash
+docker-compose up backend
+```
+
+### Stopping the Application
+
+```bash
+docker-compose down
+```
+
+To remove volumes as well:
+
+```bash
+docker-compose down -v
+```
+
+## Backend Configuration
+
+The application expects the backend API code to be in `../baby-health-api` by default. You can change this location by setting the `BACKEND_PATH` environment variable:
+
+```bash
+export BACKEND_PATH=/path/to/backend
+docker-compose up
+```
+
+## Environment Variables
+
+- `REACT_APP_API_URL`: URL for the backend API (default: http://localhost:7000)
+- `BACKEND_PATH`: Path to the backend code (default: ../baby-health-api)
+
+## Manual Build (without Docker)
+
+If you prefer to run without Docker:
+
+1. Install dependencies:
+
+   ```bash
+   npm install
+   ```
+
+2. Start the development server:
+
+   ```bash
+   npm start
+   ```
+
+3. Build for production:
+   ```bash
+   npm run build
+   ```
